@@ -1,4 +1,5 @@
 import csv
+import pprint
 from nltk.tokenize import word_tokenize
 
 def lemmatize(tokens, polimorf_dict_name):
@@ -32,6 +33,32 @@ def compute_words_cooccurence_frequency(simple_forms, stimus_words, window_width
 
 	return cooccurences
 
+def compute_associations_strengths_coefficients(cooccurences, ocurrences, alpha, beta, gamma, Q):
+	associations = {}
+
+	for stimus_words in cooccurences.keys():
+		formula_limit = beta * Q
+		for coresponding_word in cooccurences[stimus_words]:
+			if (ocurrences[stimus_words] > formula_limit):
+				print('Frequent word:', coresponding_word, ocurrences[stimus_words], formula_limit)
+				association_coefficient = compute_association_strengths_for_frequent_words(
+											cooccurences[stimus_words][coresponding_word],
+											ocurrences[coresponding_word],
+											alpha
+										)
+			else:
+				print('Rare word:', coresponding_word, ocurrences[stimus_words], formula_limit)
+				association_coefficient = compute_association_strengths_for_rare_words(
+											cooccurences[stimus_words][coresponding_word],
+											gamma,
+											Q
+										)
+			
+			associations_for_stimus_word = associations.get(stimus_words, {})
+			associations_for_stimus_word[coresponding_word] = association_coefficient
+			associations[stimus_words] = associations_for_stimus_word
+
+	return associations
 
 def initialize_polimorf_dict(polimorf_dict_name):
 	polimorf_dict = {}
@@ -56,10 +83,22 @@ def define_window_for_word(simple_forms, i, window_width):
 
 	return simple_forms[left_side_start:left_side_end] + simple_forms[right_side_start:right_side_end] 
 
+def compute_association_strengths_for_frequent_words(frequency_of_coocurence, frequency_of_single_word, alpha):
+	return frequency_of_coocurence / (frequency_of_single_word ** alpha)
+
+def compute_association_strengths_for_rare_words(frequency_of_coocurence, gamma, Q):
+	return frequency_of_coocurence / (gamma * Q)
+
+pp = pprint.PrettyPrinter()
+
 corpa_filename = 'data/korpus-pan-100.txt'
 polimorf_dict_name = 'data/PoliMorf-0.6.7.tab'
 window_width = 12
 stimus_words = ['samochód', 'samolot', 'góra', 'dom', 'budynek']
+
+alpha = 0.66
+beta = 0.00002
+gamma = 0.00002
 
 corpa_file = open(corpa_filename, "r", encoding="utf-8")
 corpa_file_content = corpa_file.read()
@@ -69,8 +108,17 @@ simple_forms  = convert_to_lower_case(simple_forms)
 
 ocurrences = compute_words_occurrence_frequency(simple_forms)
 cooccurences = compute_words_cooccurence_frequency(simple_forms, stimus_words, window_width)
+associations = compute_associations_strengths_coefficients(
+					cooccurences,
+					ocurrences,
+					alpha,
+					beta,
+					gamma,
+					len(simple_forms)
+				)
+
 
 #print(simple_forms)
 #print(ocurrences)
-print(cooccurences)
-
+#print(cooccurences)
+pp.pprint(associations)
