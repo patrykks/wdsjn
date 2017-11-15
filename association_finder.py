@@ -1,14 +1,32 @@
 import csv
 import pprint
+import re
 from nltk.tokenize import word_tokenize
+
+def remove_non_white_space_non_alpha_characters(text):
+	pattern = re.compile('[^\sa-zA-Ząćęłńóśźż]+')
+	
+	return pattern.sub('', text)
+
+def remove_short_words(text, length):
+	return ' '.join(word for word in text.split() if len(word) > length)
+
 
 def lemmatize(tokens, polimorf_dict_name):
 	polimorf_dict = initialize_polimorf_dict(polimorf_dict_name)
 
-	return [ dictionary_form_of_word(polimorf_dict, token) for token in tokens ]
+	# Avoid list comprehensions in order to save used RAM
+	for index, token in enumerate(tokens):
+		tokens[index] = dictionary_form_of_word(polimorf_dict, token)
+
+	return tokens
 
 def convert_to_lower_case(simple_forms):
-	return [ simple_form.lower() for simple_form in simple_forms]
+	# Avoid list comprehensions in order to save used RAM
+	for index, word in enumerate(simple_forms):
+		simple_forms[index] = word.lower()
+
+	return simple_forms
 
 def compute_words_occurrence_frequency(simple_forms):
 	ocurrences = {}
@@ -19,17 +37,18 @@ def compute_words_occurrence_frequency(simple_forms):
 
 	return ocurrences
 
-def compute_words_cooccurence_frequency(simple_forms, stimus_words, window_width):
+def compute_words_cooccurence_frequency(simple_forms, ocurrences, stimus_words, window_width, min_number_of_occurences):
 	cooccurences = {}
 
 	for i in range(len(simple_forms)):
 		if simple_forms[i] in stimus_words:
 			window = define_window_for_word(simple_forms, i, window_width)
 			for coelement in window:
-				form_coocurence = cooccurences.get(simple_forms[i], {})
-				coelement_frequency = form_coocurence.get(coelement, 0)
-				form_coocurence[coelement] = coelement_frequency + 1
-				cooccurences[simple_forms[i]] = form_coocurence
+				if ocurrences[coelement] >= min_number_of_occurences:
+					form_coocurence = cooccurences.get(simple_forms[i], {})
+					coelement_frequency = form_coocurence.get(coelement, 0)
+					form_coocurence[coelement] = coelement_frequency + 1
+					cooccurences[simple_forms[i]] = form_coocurence
 
 	return cooccurences
 
@@ -40,14 +59,14 @@ def compute_associations_strengths_coefficients(cooccurences, ocurrences, alpha,
 		formula_limit = beta * Q
 		for coresponding_word in cooccurences[stimus_words]:
 			if (ocurrences[stimus_words] > formula_limit):
-				print('Frequent word:', coresponding_word, ocurrences[stimus_words], formula_limit)
+				print('Frequent word:', coresponding_word, Q, ocurrences[coresponding_word], formula_limit)
 				association_coefficient = compute_association_strengths_for_frequent_words(
 											cooccurences[stimus_words][coresponding_word],
 											ocurrences[coresponding_word],
 											alpha
 										)
 			else:
-				print('Rare word:', coresponding_word, ocurrences[stimus_words], formula_limit)
+				print('Rare word:', Q,  coresponding_word, ocurrences[coresponding_word], formula_limit)
 				association_coefficient = compute_association_strengths_for_rare_words(
 											cooccurences[stimus_words][coresponding_word],
 											gamma,
@@ -91,10 +110,12 @@ def compute_association_strengths_for_rare_words(frequency_of_coocurence, gamma,
 
 pp = pprint.PrettyPrinter()
 
-corpa_filename = 'data/korpus-pan-100.txt'
+corpa_filename = 'data/korpus-pan-10000.txt'
 polimorf_dict_name = 'data/PoliMorf-0.6.7.tab'
 window_width = 12
 stimus_words = ['samochód', 'samolot', 'góra', 'dom', 'budynek']
+min_number_of_character_in_word = 3
+min_number_of_occurences = 10
 
 alpha = 0.66
 beta = 0.00002
@@ -102,12 +123,27 @@ gamma = 0.00002
 
 corpa_file = open(corpa_filename, "r", encoding="utf-8")
 corpa_file_content = corpa_file.read()
-tokens = word_tokenize(corpa_file_content)
-simple_forms = lemmatize(tokens, polimorf_dict_name)
-simple_forms  = convert_to_lower_case(simple_forms)
 
+###############################################################################
+
+print('Remove non white space, non alpha characters')
+corpa_file_content = remove_non_white_space_non_alpha_characters(corpa_file_content)
+print('Remove short words')
+corpa_file_content = remove_short_words(corpa_file_content, min_number_of_character_in_word)
+
+################################################################################
+print('Tokenize')
+tokens = word_tokenize(corpa_file_content)
+print('To lower case')
+simple_forms  = convert_to_lower_case(tokens)
+print('Lemmatize')
+simple_forms = lemmatize(tokens, polimorf_dict_name)
+
+print('Compute occurences')
 ocurrences = compute_words_occurrence_frequency(simple_forms)
-cooccurences = compute_words_cooccurence_frequency(simple_forms, stimus_words, window_width)
+print('Compute coocurences')
+cooccurences = compute_words_cooccurence_frequency(simple_forms, ocurrences, stimus_words, window_width, min_number_of_occurences)
+print('Compute associations')
 associations = compute_associations_strengths_coefficients(
 					cooccurences,
 					ocurrences,
@@ -119,6 +155,7 @@ associations = compute_associations_strengths_coefficients(
 
 
 #print(simple_forms)
-#print(ocurrences)
+#print(len(simple_forms))
+#print(simple_forms)
 #print(cooccurences)
 pp.pprint(associations)
