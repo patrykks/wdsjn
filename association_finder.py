@@ -121,8 +121,8 @@ alpha = 0.66
 beta = 0.00002
 gamma = 0.00002
 
-corpa_file = open(corpa_filename, "r", encoding="utf-8")
-corpa_file_content = corpa_file.read()
+corpa_file = open(corpa_filename, "rb")
+corpa_file_content = corpa_file.read().decode("UTF-8")
 
 ###############################################################################
 
