@@ -2,7 +2,7 @@ import os
 import json
 from association_finder import  freqDist, compute_words_cooccurence_frequency_from_file, compute_associations_strengths_coefficients
 
-preprocessed_input_file = 'preprocessed-korpus-pan-10000.txt'
+preprocessed_input_file = 'data/preprocessed-korpus-pan.txt'
 input_data_tag = 'korpus-pan'
 stimus_words = ['karabin', 'kula', 'wojsko', 'żołnierz']
 min_number_of_occurences = 10
@@ -34,4 +34,4 @@ associations = compute_associations_strengths_coefficients(
 for stimus_word in stimus_words:
 	output_filename = 'data/' + input_data_tag + '_' + stimus_word + '.json'
 	with open(output_filename, 'w') as fp:
-		json.dump(associations[stimus_word], fp, ensure_ascii=False)
+		json.dump(associations.get(stimus_word,{}), fp, ensure_ascii=False)

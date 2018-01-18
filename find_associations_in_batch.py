@@ -2,8 +2,8 @@ import os
 import json
 from association_finder import  freqDist, compute_words_cooccurence_frequency_from_file, compute_associations_strengths_coefficients
 
-rootDir = 'data/preprocessed_pap-all'
-input_data_tag = 'pap-all'
+rootDir = 'data/preprocessed_plwiki3'
+input_data_tag = 'wiki'
 window_width = 12
 stimus_words = ['karabin', 'kula', 'wojsko', 'żołnierz']
 min_number_of_occurences = 10
