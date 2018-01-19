@@ -33,10 +33,10 @@ if __name__ == "__main__":
     input_data_tag = 'korpus-pan'
     number_of_elements = 20
 
-    karabin_associations = sorted_list_with_n_tuples_containing_biggest_values(read_from_json('results/' + input_data_tag + "_" + 'karabin.json'), number_of_elements)
-    kula_associations = sorted_list_with_n_tuples_containing_biggest_values(read_from_json('results/' + input_data_tag + "_" + 'kula.json'), number_of_elements)
-    wojsko_associations = sorted_list_with_n_tuples_containing_biggest_values(read_from_json('results/' + input_data_tag + "_" + 'wojsko.json'), number_of_elements)
-    zolnierz_associations = sorted_list_with_n_tuples_containing_biggest_values(read_from_json('results/' + input_data_tag + "_" + 'żołnierz.json'), number_of_elements)
+    karabin_associations = sorted_list_with_n_tuples_containing_biggest_values(read_from_json('../results/' + input_data_tag + "_" + 'karabin.json'), number_of_elements)
+    kula_associations = sorted_list_with_n_tuples_containing_biggest_values(read_from_json('../results/' + input_data_tag + "_" + 'kula.json'), number_of_elements)
+    wojsko_associations = sorted_list_with_n_tuples_containing_biggest_values(read_from_json('../results/' + input_data_tag + "_" + 'wojsko.json'), number_of_elements)
+    zolnierz_associations = sorted_list_with_n_tuples_containing_biggest_values(read_from_json('../results/' + input_data_tag + "_" + 'żołnierz.json'), number_of_elements)
 
     G = nx.Graph()
 

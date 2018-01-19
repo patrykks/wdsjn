@@ -16,7 +16,6 @@ def process(input_filename, output_filename, polimorf_dict, stop_words, step_1_f
     process_file_by_word(step_2_filename, fn, step_3_filename)
 
     print('Step 4 - Remove stop words - start')
-
     fn = lambda x: remove_stop_words(stop_words, x)
     process_file_by_word(step_3_filename, fn, output_filename)
 

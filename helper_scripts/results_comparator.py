@@ -56,25 +56,25 @@ if __name__ == "__main__":
 
     dict_of_results = {}
 
-    dict_of_results['pap_all-kula'] = read_from_json('results/pap-all_kula.json')
-    dict_of_results['pap_all-karabin'] = read_from_json('results/pap-all_kula.json')
-    dict_of_results['pap_all-zolnierz'] = read_from_json('results/pap-all_żołnierz.json')
-    dict_of_results['pap_all-wojsko'] = read_from_json('results/pap-all_wojsko.json')
+    dict_of_results['pap_all-kula'] = read_from_json('../results/pap-all_kula.json')
+    dict_of_results['pap_all-karabin'] = read_from_json('../results/pap-all_kula.json')
+    dict_of_results['pap_all-zolnierz'] = read_from_json('../results/pap-all_żołnierz.json')
+    dict_of_results['pap_all-wojsko'] = read_from_json('../results/pap-all_wojsko.json')
 
-    dict_of_results['wiki-kula'] = read_from_json('results/wiki_kula.json')
-    dict_of_results['wiki-karabin'] = read_from_json('results/wiki_kula.json')
-    dict_of_results['wiki-zolnierz'] = read_from_json('results/wiki_żołnierz.json')
-    dict_of_results['wiki-wojsko'] = read_from_json('results/wiki_wojsko.json')
+    dict_of_results['wiki-kula'] = read_from_json('../results/wiki_kula.json')
+    dict_of_results['wiki-karabin'] = read_from_json('../results/wiki_kula.json')
+    dict_of_results['wiki-zolnierz'] = read_from_json('../results/wiki_żołnierz.json')
+    dict_of_results['wiki-wojsko'] = read_from_json('../results/wiki_wojsko.json')
     
-    dict_of_results['korpus_pan-kula'] = read_from_json('results/korpus-pan_kula.json')
-    dict_of_results['korpus_pan-karabin'] = read_from_json('results/korpus-pan_kula.json')
-    dict_of_results['korpus_pan-zolnierz'] = read_from_json('results/korpus-pan_żołnierz.json')
-    dict_of_results['korpus_pan-wojsko'] = read_from_json('results/korpus-pan_wojsko.json')
+    dict_of_results['korpus_pan-kula'] = read_from_json('../results/korpus-pan_kula.json')
+    dict_of_results['korpus_pan-karabin'] = read_from_json('../results/korpus-pan_kula.json')
+    dict_of_results['korpus_pan-zolnierz'] = read_from_json('../results/korpus-pan_żołnierz.json')
+    dict_of_results['korpus_pan-wojsko'] = read_from_json('../results/korpus-pan_wojsko.json')
 
-    dict_of_results['ref-kula'] = read_from_csv('results/kula.csv')
-    dict_of_results['ref-wojsko'] = read_from_csv('results/wojsko.csv')
-    dict_of_results['ref-zolnierz'] = read_from_csv('results/zolnierz.csv')
-    dict_of_results['ref-karabin'] = read_from_csv('results/karabin.csv')
+    dict_of_results['ref-kula'] = read_from_csv('../results/kula.csv')
+    dict_of_results['ref-wojsko'] = read_from_csv('../results/wojsko.csv')
+    dict_of_results['ref-zolnierz'] = read_from_csv('../results/zolnierz.csv')
+    dict_of_results['ref-karabin'] = read_from_csv('../results/karabin.csv')
 
     combinations = list(it.combinations(dict_of_results.keys(), 2))
     for combination in combinations:

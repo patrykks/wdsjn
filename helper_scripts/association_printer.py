@@ -3,7 +3,7 @@ import pprint
 
 pp = pprint.PrettyPrinter()
 number_of_assocation_to_print = 30
-association_coefficients_filename = 'data/kula.json'
+association_coefficients_filename = '../data/kula.json'
 keyword = 'kula'
 
 def print_association(keyword, number_of_assocation_to_print, associations):
